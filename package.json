@@ -1,0 +1,62 @@
+{
+  "name": "vision-georadar",
+  "version": "1.0.0",
+  "description": "Standalone GeoGuessr helper (unofficial, not affiliated with GeoGuessr AB): global hotkey -> screenshot -> AI analysis -> map",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "electron-store": "^8.2.0",
+    "electron-updater": "^6.3.9"
+  },
+  "devDependencies": {
+    "electron": "^44.0.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "com.refness.visiongeoradar",
+    "productName": "Vision GeoRadar",
+    "files": [
+      "main.js",
+      "preload.js",
+      "config-store.js",
+      "renderer/**/*",
+      "assets/**/*"
+    ],
+    "publish": {
+      "provider": "github",
+      "owner": "refness",
+      "repo": "geo-radar"
+    },
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64"] },
+        { "target": "portable", "arch": ["x64"] }
+      ],
+      "icon": "assets/icons/icon.ico",
+      "artifactName": "${productName}-${version}-Setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-Portable.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "artifactName": "${productName}-${version}-Setup.${ext}"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icons/icon.png"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icons/icon.png"
+    }
+  }
+}

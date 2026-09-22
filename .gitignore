@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+*.exe
+*.dmg
+*.AppImage
+*.zip
+
+# Electron-builder cache
+.cache/
+
+# Environment / secrets — in case someone adds a .env for GOOGLE_API_KEY / OPENROUTER_API_KEY
+.env
+.env.local
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+npm-debug.log*

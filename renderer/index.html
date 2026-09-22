@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'none';
+  script-src 'self';
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' data: https://tile.openstreetmap.org;
+  font-src 'self';
+  connect-src 'self';
+  object-src 'none';
+  base-uri 'none';
+" />
+<title>Vision GeoRadar</title>
+<link rel="stylesheet" href="../assets/leaflet/leaflet.css" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-dark">
+
+  <div id="main-frame">
+
+    <div id="title-bar">
+      <span id="drag-title">Vision GeoRadar</span>
+      <div id="win-controls">
+        <button id="min-btn" title="Minimize">
+          <svg viewBox="0 0 16 16" width="10" height="10" fill="none"><path d="M3 8H13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+        <button id="close-btn" title="Close">
+          <svg viewBox="0 0 16 16" width="11" height="11" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <section id="view-onboarding" class="view">
+      <div class="card" id="onboarding-card">
+        <h1 id="onb-title" class="onb-title"></h1>
+        <p id="onb-intro" class="desc"></p>
+
+        <ol class="onb-steps">
+          <li id="onb-step1"></li>
+          <li id="onb-step2"></li>
+          <li id="onb-step3"></li>
+        </ol>
+
+        <button id="onb-open-btn" class="pill-btn full-width"></button>
+
+        <div class="apikey-row onb-input-row">
+          <input type="password" id="onb-apikey-input" class="text-input" autocomplete="off" spellcheck="false" />
+          <button type="button" id="onb-apikey-toggle" class="icon-btn small-icon-btn" title="Show/hide"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.6" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        </div>
+
+        <button id="onb-continue-btn" class="pill-btn full-width primary-btn" disabled></button>
+        <button id="onb-skip-btn" class="link-btn"></button>
+      </div>
+    </section>
+
+    <section id="view-radar" class="view">
+      <div id="update-banner" class="update-banner" style="display:none;">
+        <span id="update-banner-text"></span>
+        <button id="update-restart-btn" class="link-btn-inline"></button>
+      </div>
+
+      <div class="card" id="header-card">
+        <div class="top-bar">
+          <span id="badge" class="badge"></span>
+          <span id="scan-timer" class="scan-timer" style="display:none;"></span>
+          <div class="spacer"></div>
+          <span id="quota-badge" class="quota-badge" title=""></span>
+          <button id="history-btn" class="icon-btn" title="History"><svg viewBox="0 0 24 24" width="17" height="17" fill="none"><circle cx="12" cy="12" r="8.2" stroke="currentColor" stroke-width="1.6"/><path d="M12 7.5V12l3.2 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button id="settings-btn" class="icon-btn" title="Settings"><svg viewBox="0 0 24 24" width="18" height="18" fill="none"><circle cx="12" cy="12" r="3.3" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="8.3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-dasharray="1.7 3.2"/></svg></button>
+        </div>
+        <h1 id="title-label"></h1>
+        <p id="clues-label" class="desc"></p>
+        <p id="alternatives-label" class="desc alternatives" style="display:none;"></p>
+        <button id="maps-link-btn" class="link-btn" style="display:none;"></button>
+        <p id="disclaimer-label" class="disclaimer"></p>
+        <p id="quota-footnote" class="disclaimer"></p>
+      </div>
+
+      <div class="card" id="map-card">
+        <div id="map"></div>
+      </div>
+    </section>
+
+    <section id="view-history" class="view">
+      <div class="card" id="history-card">
+        <div class="top-bar">
+          <button id="history-back-btn" class="pill-btn"></button>
+        </div>
+        <h1 id="history-title" class="onb-title"></h1>
+        <div id="history-list" class="history-list"></div>
+        <p id="history-empty" class="desc" style="display:none;"></p>
+      </div>
+    </section>
+
+    <section id="view-settings" class="view">
+      <div class="card" id="settings-card">
+        <div class="top-bar">
+          <button id="back-btn" class="pill-btn"></button>
+        </div>
+
+        <div class="field-group">
+          <label class="field-title" id="apikey-title"></label>
+          <div class="apikey-row">
+            <input type="password" id="apikey-input" class="text-input" autocomplete="off" spellcheck="false" />
+            <button type="button" id="apikey-toggle" class="icon-btn small-icon-btn" title="Show/hide"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.6" stroke="currentColor" stroke-width="1.6"/></svg></button>
+          </div>
+          <p class="field-hint" id="apikey-hint"></p>
+        </div>
+
+        <div class="settings-row">
+          <div class="field-group">
+            <label class="field-title" id="lang-title"></label>
+            <div class="dropdown" id="lang-dropdown">
+              <button type="button" class="dropdown-toggle" id="lang-toggle">
+                <span class="dropdown-value" id="lang-value"></span>
+                <svg class="dropdown-caret" viewBox="0 0 12 8" fill="none"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="dropdown-menu" id="lang-menu"></div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-title" id="theme-title"></label>
+            <div class="dropdown" id="theme-dropdown">
+              <button type="button" class="dropdown-toggle" id="theme-toggle">
+                <span class="dropdown-value" id="theme-value"></span>
+                <svg class="dropdown-caret" viewBox="0 0 12 8" fill="none"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="dropdown-menu" id="theme-menu"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-title" id="hotkey-title"></label>
+          <button id="hotkey-btn" class="pill-btn full-width hotkey-btn"></button>
+        </div>
+
+        <div class="field-group">
+          <label class="field-title" id="cancel-hotkey-title"></label>
+          <button id="cancel-hotkey-btn" class="pill-btn full-width hotkey-btn"></button>
+        </div>
+
+        <div class="field-group">
+          <label class="field-title" id="timeout-title"></label>
+          <div class="timeout-row">
+            <input type="range" id="timeout-slider" min="5" max="60" step="5" />
+            <span id="timeout-value" class="timeout-value"></span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-title" id="restart-hotkey-title"></label>
+          <button id="restart-hotkey-btn" class="pill-btn full-width hotkey-btn"></button>
+        </div>
+
+        <div class="field-group">
+          <label class="field-title" id="storage-title"></label>
+          <p class="field-hint" id="storage-current-path" style="word-break: break-all; margin-bottom: 10px;"></p>
+          <div class="settings-row">
+            <button id="storage-change-btn" class="pill-btn full-width"></button>
+            <button id="storage-reset-btn" class="pill-btn full-width" style="display:none;"></button>
+          </div>
+          <p class="field-hint" id="storage-hint"></p>
+        </div>
+
+        <div class="field-group">
+          <label class="field-title" id="clear-data-title"></label>
+          <div class="settings-row">
+            <button id="clear-history-btn" class="pill-btn full-width danger-btn"></button>
+            <button id="clear-apikey-btn" class="pill-btn full-width danger-btn"></button>
+          </div>
+          <p class="field-hint" id="clear-data-hint"></p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="../assets/leaflet/leaflet.js"></script>
+  <script src="translations.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>
